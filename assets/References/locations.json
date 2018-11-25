@@ -1,0 +1,7461 @@
+{
+	"home" : {
+		"serializable" : true,
+
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.06,
+			"max" : 0.06
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.1,
+			"max" : 0.1
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 6,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 7
+			}
+		},
+
+		"loot_objects" : {
+			"chest_home" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 300,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "weak_zombie_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "wolf_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "common_zombie_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "weak_zombie_home"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "wolf"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 3
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 120,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+
+			"horde_event" : {
+				"type" : "single_requirement",
+				"probability" : 1,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "ts_now"
+					},
+					"second" : {
+						"type" : "resource",
+						"resource" : "horde_end_destroy_ts"
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "spawn_horde",
+					"avatar" : "weak_zombie_horde",
+					"count" : 30,
+					"radius" : 7.0,
+					"position" : {
+						"type" : "edge",
+						"border" : 7.0
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie_home" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"deer" : {
+				"type" : "single",
+				"amount" : 3
+			}
+		}
+	},
+
+	"hard_forest" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 12
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.07,
+			"max" : 0.07
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 10,
+		"chunks_count_z" : 10,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 90
+			},
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 45
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 15
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 40
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 10
+			}
+		},
+
+		"loot_objects" : {
+			"chest_1_hard" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 5,
+						"weight" : 5
+					}, {
+						"amount" : 4,
+						"weight" : 5
+					}
+				]
+			}
+		},
+
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 30,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 7
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 4,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "fat_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "tank_zombie",
+								"position" : {
+									"type" : "edge",
+									"border" : 5.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.5,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_8"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_9"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_8",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_9",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 30,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 50,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"common_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 8,
+						"weight" : 5
+					}, {
+						"amount" : 6,
+						"weight" : 3
+					}, {
+						"amount" : 5,
+						"weight" : 2
+					}
+				]
+			},
+			"common_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 10,
+						"weight" : 6
+					}, {
+						"amount" : 8,
+						"weight" : 4
+					}
+				]
+			},
+			"fat_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 5
+					}, {
+						"amount" : 1,
+						"weight" : 4
+					}, {
+						"amount" : 3,
+						"weight" : 1
+					}
+				]
+			},
+			"fat_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 1,
+						"weight" : 1
+					}
+				]
+			},
+			"tank_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 1,
+						"weight" : 0.5
+					}, {
+						"amount" : 0,
+						"weight" : 9.5
+					}
+				]
+			},
+			"wolf_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 3,
+						"weight" : 6
+					}
+				]
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 4
+					}, {
+						"amount" : 5,
+						"weight" : 6
+					}
+				]
+			}
+		}
+	},
+
+	"normal_forest" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 12
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.07,
+			"max" : 0.07
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 8,
+		"chunks_count_z" : 8,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 55
+			},
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 30
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 10
+			}
+		},
+
+		"loot_objects" : {
+			"chest_1_normal" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 4,
+						"weight" : 5
+					}, {
+						"amount" : 3,
+						"weight" : 5
+					}
+				]
+			}
+		},
+
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.6,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 8
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 3.55,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 3.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.9,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.05,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "tank_zombie",
+								"position" : {
+									"type" : "edge",
+									"border" : 5.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.5,
+				"period" : 110,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_8"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_9"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 2,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_8",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_9",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 60,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 110,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 6,
+						"weight" : 5
+					}, {
+						"amount" : 4,
+						"weight" : 3
+					}, {
+						"amount" : 3,
+						"weight" : 2
+					}
+				]
+			},
+			"wolf" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 4,
+						"weight" : 1
+					}
+				]
+			},
+			"common_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 10,
+						"weight" : 5
+					}, {
+						"amount" : 8,
+						"weight" : 3
+					}, {
+						"amount" : 12,
+						"weight" : 2
+					}
+				]
+			},
+			"common_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 1,
+						"weight" : 1
+					}
+				]
+			},
+			"fat_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 6
+					}, {
+						"amount" : 1,
+						"weight" : 3
+					}, {
+						"amount" : 3,
+						"weight" : 1
+					}
+				]
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 4,
+						"weight" : 4
+					}, {
+						"amount" : 2,
+						"weight" : 6
+					}
+				]
+			}
+		}
+	},
+
+	"easy_forest" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 12
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.07,
+			"max" : 0.07
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 8,
+		"chunks_count_z" : 8,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 27
+			},
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 3
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 3
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 19
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 21
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 10
+			}
+		},
+
+		"loot_objects" : {
+			"chest_1_easy" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 3
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 2,
+							"weight" : 7
+						}, {
+							"amount" : 3,
+							"weight" : 3
+						}
+					]
+				}
+			}
+		},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "fat_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.4,
+				"period" : 170,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_naked"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.15,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.15,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 80,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 170,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+
+			"first_enter_event_naked_bot" : {
+				"type" : "period_requirement",
+				"probability" : 1.0,
+				"period" : 5,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "first_enter_event_naked_bot_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "composite",
+					"actions" : [{
+							"type" : "spawn_avatar",
+							"avatar" : "player_bot_naked",
+							"position" : {
+								"type" : "out_of_player_vision",
+								"radius" : 10.0
+							}
+						}, {
+							"type" : "player_reward",
+							"reward" : {
+								"type" : "static_resource",
+								"resource" : "first_enter_event_naked_bot_counter",
+								"amount" : 1
+							}
+						}
+					]
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 12
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 15,
+							"weight" : 4
+						}, {
+							"amount" : 12,
+							"weight" : 4
+						}, {
+							"amount" : 10,
+							"weight" : 2
+						}
+					]
+				}
+			},
+			"wolf" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 2
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 3,
+							"weight" : 4
+						}, {
+							"amount" : 2,
+							"weight" : 4
+						}, {
+							"amount" : 1,
+							"weight" : 2
+						}
+					]
+				}
+			},
+			"common_zombie" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 2
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 3,
+							"weight" : 4
+						}, {
+							"amount" : 2,
+							"weight" : 3
+						}, {
+							"amount" : 4,
+							"weight" : 3
+						}
+					]
+				}
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 4
+					}, {
+						"amount" : 2,
+						"weight" : 6
+					}
+				]
+			}
+		}
+	},
+
+	"hard_rocks" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 7
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.06,
+			"max" : 0.06
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 10,
+		"chunks_count_z" : 10,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 45
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 15
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 45
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 50
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 40
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 10
+			}
+		},
+
+		"loot_objects" : {
+			"chest_1_hard" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 5,
+						"weight" : 5
+					}, {
+						"amount" : 4,
+						"weight" : 5
+					}
+				]
+			}
+		},
+
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 30,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 7
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 4,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 3.0
+								}
+							}
+						}, {
+							"weight" : 3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "fat_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "tank_zombie",
+								"position" : {
+									"type" : "edge",
+									"border" : 5.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.5,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_8"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_9"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_8",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_9",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 30,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 50,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"common_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 8,
+						"weight" : 5
+					}, {
+						"amount" : 6,
+						"weight" : 3
+					}, {
+						"amount" : 5,
+						"weight" : 2
+					}
+				]
+			},
+			"common_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 10,
+						"weight" : 6
+					}, {
+						"amount" : 8,
+						"weight" : 4
+					}
+				]
+			},
+			"fat_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 5
+					}, {
+						"amount" : 1,
+						"weight" : 4
+					}, {
+						"amount" : 3,
+						"weight" : 1
+					}
+				]
+			},
+			"fat_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 1,
+						"weight" : 1
+					}
+				]
+			},
+			"tank_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 1,
+						"weight" : 0.5
+					}, {
+						"amount" : 0,
+						"weight" : 9.5
+					}
+				]
+			},
+			"wolf_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 3,
+						"weight" : 6
+					}
+				]
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 4
+					}, {
+						"amount" : 5,
+						"weight" : 6
+					}
+				]
+			}
+		}
+	},
+
+	"normal_rocks" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 7
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.06,
+			"max" : 0.06
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 8,
+		"chunks_count_z" : 8,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 3
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 30
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 30
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 30
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 10
+			}
+		},
+
+		"loot_objects" : {
+			"chest_1_normal" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 4,
+						"weight" : 5
+					}, {
+						"amount" : 3,
+						"weight" : 5
+					}
+				]
+			}
+		},
+
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.6,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 8
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 3.55,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 3.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.9,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.05,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "tank_zombie",
+								"position" : {
+									"type" : "edge",
+									"radius" : 2.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.5,
+				"period" : 110,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_8"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_9"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 2,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_8",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_9",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 60,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 110,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 6,
+						"weight" : 5
+					}, {
+						"amount" : 4,
+						"weight" : 3
+					}, {
+						"amount" : 3,
+						"weight" : 2
+					}
+				]
+			},
+			"wolf" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 4,
+						"weight" : 1
+					}
+				]
+			},
+			"common_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 10,
+						"weight" : 5
+					}, {
+						"amount" : 8,
+						"weight" : 3
+					}, {
+						"amount" : 12,
+						"weight" : 2
+					}
+				]
+			},
+			"common_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 1,
+						"weight" : 1
+					}
+				]
+			},
+			"fat_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 6
+					}, {
+						"amount" : 1,
+						"weight" : 3
+					}, {
+						"amount" : 3,
+						"weight" : 1
+					}
+				]
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 4,
+						"weight" : 4
+					}, {
+						"amount" : 2,
+						"weight" : 6
+					}
+				]
+			}
+		}
+	},
+
+	"easy_rocks" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 7
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.06,
+			"max" : 0.06
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 8,
+		"chunks_count_z" : 8,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 7
+			},
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 3
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 25
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 10
+			}
+		},
+
+		"loot_objects" : {
+			"chest_1_easy" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 3
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 2,
+							"weight" : 7
+						}, {
+							"amount" : 3,
+							"weight" : 3
+						}
+					]
+				}
+			}
+		},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "fat_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.4,
+				"period" : 170,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_naked"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.15,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.15,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 80,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 170,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+
+			"first_enter_event_naked_bot" : {
+				"type" : "period_requirement",
+				"probability" : 1.0,
+				"period" : 5,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "first_enter_event_naked_bot_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "composite",
+					"actions" : [{
+							"type" : "spawn_avatar",
+							"avatar" : "player_bot_naked",
+							"position" : {
+								"type" : "out_of_player_vision",
+								"radius" : 10.0
+							}
+						}, {
+							"type" : "player_reward",
+							"reward" : {
+								"type" : "static_resource",
+								"resource" : "first_enter_event_naked_bot_counter",
+								"amount" : 1
+							}
+						}
+					]
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 12
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 15,
+							"weight" : 4
+						}, {
+							"amount" : 12,
+							"weight" : 4
+						}, {
+							"amount" : 10,
+							"weight" : 2
+						}
+					]
+				}
+			},
+			"wolf" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 2
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 3,
+							"weight" : 4
+						}, {
+							"amount" : 2,
+							"weight" : 4
+						}, {
+							"amount" : 1,
+							"weight" : 2
+						}
+					]
+				}
+			},
+			"common_zombie" : {
+				"type" : "critical",
+				"requirement" : {
+					"type" : "resource",
+					"resource" : "easy_location_enter_counter",
+					"amount" : 1
+				},
+				"regular" : {
+					"type" : "single",
+					"amount" : 2
+				},
+				"critical" : {
+					"type" : "random_weight",
+					"amounts" : [{
+							"amount" : 3,
+							"weight" : 4
+						}, {
+							"amount" : 2,
+							"weight" : 3
+						}, {
+							"amount" : 4,
+							"weight" : 3
+						}
+					]
+				}
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 4
+					}, {
+						"amount" : 2,
+						"weight" : 6
+					}
+				]
+			}
+		}
+	},
+
+	"shelter_alpha" : {
+	
+		"seed" : 100,
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : 25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : 25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : 25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.1,
+			"max" : 0.1
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : 25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : 25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : 25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.01,
+			"max" : 0.01
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : -2.97,
+			"max" : -2.97
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 5.59,
+			"max" : 5.59
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 6.96,
+			"max" : 6.96
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.075,
+			"max" : 0.075
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 6,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 17
+			}
+		},
+		
+		"loot_objects" : {
+			"chest_1_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_2_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_3_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_4_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_5_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_6_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_7_bunker_a" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		
+		"avatars" : {
+		},
+		
+		"unique_avatars" : {
+			"gatekeeper_zombie" : [{
+					"position" : [-1.68, 0, -9],
+					"rotation" : [20, -137, 20]
+				}
+			]
+		},
+		"always_show_corpse" : [
+			"player_bot_died"
+		],
+
+		"buildings" : {
+			"furnitures" : [{
+					"type" : "collection",
+					"id" : "buildingsite_bunker_a",
+					"rotation" : 0,
+					"position" : [8, 6],
+					"collection" : {}
+				}
+			]
+		}
+	},
+
+	"shelter_beta" : {
+	
+		"seed" : 1,
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : 14.0,
+			"max" : 14.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : 12.0,
+			"max" : 12.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : 14.0,
+			"max" : 14.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.1,
+			"max" : 0.1
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : 12.0,
+			"max" : 12.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : 12.0,
+			"max" : 12.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : 12.0,
+			"max" : 12.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.1,
+			"max" : 0.1
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0.15,
+			"max" : 0.15
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 3.91,
+			"max" : 3.91
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : -13,
+			"max" : -13
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.05,
+			"max" : 0.05
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 7,
+		"chunks_count_z" : 7,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 22
+			}
+		},
+		
+		"loot_objects" : {
+			"chest_1_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_2_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_3_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_4_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_5_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_6_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"chest_7_bunker_b" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"avatars" : {
+			"fat_zombie" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"fat_zombie_elite" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"bunker_zombie" : {
+				"type" : "single",
+				"amount" : 15
+			}
+		},
+
+		"buildings" : {
+			"furnitures" : [{
+					"type" : "collection",
+					"id" : "buildingsite_bunker_b",
+					"rotation" : 0,
+					"position" : [11, 9],
+					"collection" : {}
+				}
+			]
+		}
+	},
+
+	"shelter_charlie" : {
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 10,
+		"chunks_count_z" : 10,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 50
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 5
+			}
+		},
+		"loot_objects" : {},
+		"avatars" : {}
+	},
+
+	"toxic_forest" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 12
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.07,
+			"max" : 0.07
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 10,
+		"chunks_count_z" : 10,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 100
+			},
+			"rock" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 45
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 25
+			},
+			"iron" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 40
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 0
+			}
+		},
+		"loot_objects" : {
+			"chest_1_hard" : {
+				"type" : "single",
+				"amount" : 4
+			}
+		},
+
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 30,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 7
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 4,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 3.0
+								}
+							}
+						}, {
+							"weight" : 3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "fat_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "tank_zombie",
+								"position" : {
+									"type" : "edge",
+									"radius" : 2.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.5,
+				"period" : 50,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_8"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_hard_9"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_8",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_hard_9",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 30,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 50,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"common_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 10,
+						"weight" : 5
+					}, {
+						"amount" : 15,
+						"weight" : 3
+					}, {
+						"amount" : 12,
+						"weight" : 2
+					}
+				]
+			},
+			"fat_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 4,
+						"weight" : 5
+					}, {
+						"amount" : 3,
+						"weight" : 4
+					}, {
+						"amount" : 2,
+						"weight" : 1
+					}
+				]
+			},
+			"wolf_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 5,
+						"weight" : 5
+					}, {
+						"amount" : 4,
+						"weight" : 4
+					}, {
+						"amount" : 3,
+						"weight" : 1
+					}
+				]
+			},
+			"tank_zombie" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		}
+	},
+
+	"airdrop" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 7,
+		"chunks_count_z" : 8,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 15
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 15
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 5
+			}
+		},
+		"loot_objects" : {
+			"airdrop_container" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 3
+					}, {
+						"amount" : 1,
+						"weight" : 2
+					}
+				]
+			},
+			"common_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 3,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 3
+					}, {
+						"amount" : 1,
+						"weight" : 2
+					}
+				]
+			},
+			"common_zombie_elite" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 1,
+						"weight" : 5
+					}, {
+						"amount" : 2,
+						"weight" : 4
+					}, {
+						"amount" : 0,
+						"weight" : 1
+					}
+				]
+			},
+			"fat_zombie" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 0,
+						"weight" : 4
+					}, {
+						"amount" : 1,
+						"weight" : 6
+					}
+				]
+			},
+			"deer" : {
+				"type" : "random_weight",
+				"amounts" : [{
+						"amount" : 2,
+						"weight" : 5
+					}, {
+						"amount" : 3,
+						"weight" : 3
+					}, {
+						"amount" : 1,
+						"weight" : 2
+					}
+				]
+			}
+		},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.8,
+				"period" : 60,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 8
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 3.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_elite_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.3,
+				"period" : 110,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_7"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_8"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_normal_9"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 2,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_8",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_normal_9",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 60,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 110,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+		"buildings" : {}
+	},
+
+	"trader" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 5,
+		"chunks_count_z" : 5,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"pine_tree" : {
+				"type" : "single",
+				"amount" : 7
+			}
+		},
+		"unique_avatars" : {
+			"trader" : [{
+					"position" : [-0.85, 0, -2],
+					"rotation" : [0, -137, 0]
+				}
+			]
+		},
+		"buildings" : {
+			"furnitures" : [{
+					"type" : "decoration",
+					"id" : "trader_decoration",
+					"rotation" : 0,
+					"position" : [6, 6]
+				}
+			]
+		}
+	},
+
+	"aircraft" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 11,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 30
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 5
+			}
+		},
+		"loot_objects" : {
+			"boeing_baggage_01" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_02" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_03" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_04" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_05" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_06" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_07" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_08" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_09" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_10" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_11" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_12" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_13" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_14" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_15" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_16" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_17" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_18" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_19" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_20" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 80,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"common_zombie" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"common_zombie_elite" : {
+				"type" : "single",
+				"amount" : 0
+			}
+		},
+
+		"unique_avatars" : {
+			"player_bot_died" : [{
+					"position" : [-0.85, 3, -2],
+					"rotation" : [20, -137, 20]
+				}, {
+					"position" : [-2.85, 4, 3],
+					"rotation" : [20, 57, 10]
+				}, {
+					"position" : [-16.85, 3, -6],
+					"rotation" : [-20, 270, 30]
+				}, {
+					"position" : [13.85, 3, 3],
+					"rotation" : [20, 70, -20]
+				}, {
+					"position" : [-29, 5, -11.5],
+					"rotation" : [320, 180, -20]
+				}, {
+					"position" : [-5, 3, -3],
+					"rotation" : [-25, 230, 25]
+				}, {
+					"position" : [12.5, 4, 9.4],
+					"rotation" : [25, 34, 15]
+				}, {
+					"position" : [30.3, 3, 5.1],
+					"rotation" : [-25, 171, 11]
+				}
+			]
+		},
+		"always_show_corpse" : [
+			"player_bot_died"
+		],
+		"buildings" : {}
+	},
+
+	"aircraft_2" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 11,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 20
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 30
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 5
+			}
+		},
+		"loot_objects" : {
+			"boeing_baggage_01" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_02" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_03" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_04" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_05" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_06" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_07" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_08" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_09" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_10" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_11" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_12" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_13" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_14" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_15" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_16" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_17" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_18" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_19" : {
+				"type" : "single",
+				"amount" : 1
+			},
+			"boeing_baggage_20" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 80,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"common_zombie" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"common_zombie_elite" : {
+				"type" : "single",
+				"amount" : 0
+			}
+		},
+
+		"unique_avatars" : {
+			"player_bot_died" : [{
+					"position" : [-0.85, 3, -2],
+					"rotation" : [20, -137, 20]
+				}, {
+					"position" : [-2.85, 4, 3],
+					"rotation" : [20, 57, 10]
+				}, {
+					"position" : [-16.85, 3, -6],
+					"rotation" : [-20, 270, 30]
+				}, {
+					"position" : [13.85, 3, 3],
+					"rotation" : [20, 70, -20]
+				}, {
+					"position" : [-29, 5, -11.5],
+					"rotation" : [320, 180, -20]
+				}, {
+					"position" : [-5, 3, -3],
+					"rotation" : [-25, 230, 25]
+				}, {
+					"position" : [12.5, 4, 9.4],
+					"rotation" : [25, 34, 15]
+				}, {
+					"position" : [30.3, 3, 5.1],
+					"rotation" : [-25, 171, 11]
+				}
+			]
+		},
+		"always_show_corpse" : [
+			"player_bot_died"
+		],
+		"buildings" : {}
+	},
+
+	"gas_station" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 7,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {
+			"dead_tree" : {
+				"type" : "single",
+				"amount" : 5
+			},
+			"tree_item" : {
+				"type" : "single",
+				"amount" : 6
+			},
+			"rock_item" : {
+				"type" : "single",
+				"amount" : 10
+			},
+			"fiber" : {
+				"type" : "single",
+				"amount" : 2
+			},
+			"berry" : {
+				"type" : "single",
+				"amount" : 2
+			}
+		},
+		"loot_objects" : {},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 80,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "true"
+				},
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.7,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "fat_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+			"event_pvp_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.4,
+				"period" : 170,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pvp_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 5
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_1"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_2"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_3"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_4"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_5"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_6"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "player_bot_easy_7"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 1
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 3,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_1",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.15,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_2",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.15,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_3",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_4",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_5",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_6",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.1,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "player_bot_easy_7",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 80,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			},
+			"event_pvp_enemy_counter" : {
+				"type" : "period",
+				"period" : 170,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pvp_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+
+		"avatars" : {
+			"weak_zombie" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"common_zombie" : {
+				"type" : "single",
+				"amount" : 0
+			},
+			"common_zombie_elite" : {
+				"type" : "single",
+				"amount" : 0
+			}
+		},
+
+		"unique_avatars" : {},
+		"always_show_corpse" : [
+			"player_bot_died"
+		],
+		"buildings" : {}
+	},
+
+	"enemy_01" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"builder_update_period" : 180,
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 6,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {},
+		"loot_objects" : {
+			"chest_home_enemy" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"avatars" : {},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 60,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 7
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "weak_zombie_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "wolf_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "common_zombie_event"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 3
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 4,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 60,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+		"buildings" : {
+			"foundaments" : [{
+					"id" : "default",
+					"grade" : 2,
+					"position" : [10, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [10, 10]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [10, 8]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 8]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 10]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 10]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 8]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [13, 11]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [6, 10]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [6, 11]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [6, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [5, 11]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [4, 11]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [4, 10]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [5, 10]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [5, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [4, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [6, 8]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [5, 8]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [4, 8]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [4, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [4, 4]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [13, 4]
+				}
+			],
+			"walls" : [{
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [26, 23]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [27, 24]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [28, 23]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [27, 22]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [11, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [13, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [14, 9]
+				}, {
+					"id" : "door",
+					"grade" : 1,
+					"position" : [14, 11]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [13, 12]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [11, 12]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [9, 12]
+				}, {
+					"id" : "door",
+					"grade" : 1,
+					"position" : [8, 11]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [8, 9]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [9, 8]
+				}, {
+					"id" : "window",
+					"grade" : 2,
+					"position" : [8, 19]
+				}, {
+					"id" : "window",
+					"grade" : 2,
+					"position" : [8, 21]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [8, 23]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [9, 24]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [11, 24]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [13, 24]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [14, 23]
+				}, {
+					"id" : "door",
+					"grade" : 2,
+					"position" : [14, 21]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [14, 19]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [14, 17]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [13, 16]
+				}, {
+					"id" : "window",
+					"grade" : 2,
+					"position" : [11, 16]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [9, 16]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [8, 17]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [27, 10]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [28, 9]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [27, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [26, 9]
+				}
+			],
+			"furnitures" : [{
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 2,
+					"position" : [12, 11]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 2,
+					"position" : [11, 11]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 2,
+					"position" : [10, 11]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 2,
+					"position" : [9, 11]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [13, 10]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [13, 9]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [13, 8]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [13, 7]
+				}, {
+					"type" : "container",
+					"id" : "workbench_smeltery_enemy",
+					"rotation" : 1,
+					"position" : [12, 6]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_horsefeeder",
+					"rotation" : 1,
+					"position" : [12, 5]
+				}, {
+					"type" : "container",
+					"id" : "workbench_meatdryer_enemy",
+					"rotation" : 0,
+					"position" : [10, 5]
+				}, {
+					"type" : "workbench",
+					"id" : "workbench_tanningrack",
+					"rotation" : 0,
+					"position" : [9, 5]
+				}, {
+					"type" : "container",
+					"id" : "workbench_bonfire_enemy",
+					"rotation" : 2,
+					"position" : [9, 7]
+				}, {
+					"type" : "spawn_point",
+					"id" : "furniture_rag",
+					"rotation" : 3,
+					"position" : [7, 10]
+				}, {
+					"type" : "collection",
+					"id" : "buildingsite_atv",
+					"rotation" : 0,
+					"position" : [10, 8],
+					"collection" : {
+						"screws" : 0,
+						"bearings" : 0,
+						"rubber_parts" : 0,
+						"resource_metalscraps" : 0,
+						"engine_parts" : 1,
+						"wire" : 0,
+						"atv_wheel" : 3,
+						"atv_transmission" : 1,
+						"atv_gastank" : 1,
+						"atv_tilt" : 1
+					}
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 2,
+					"position" : [8, 11]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 2,
+					"position" : [7, 11]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 1,
+					"position" : [6, 7]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 1,
+					"position" : [6, 6]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [13, 6]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [13, 5]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 0,
+					"position" : [12, 4]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 0,
+					"position" : [11, 4]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 0,
+					"position" : [10, 4]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 0,
+					"position" : [9, 4]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 0,
+					"position" : [8, 4]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 0,
+					"position" : [7, 4]
+				}
+			]
+		}
+	},
+	"enemy_02" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"builder_update_period" : 28800,
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 6,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {},
+		"loot_objects" : {
+			"chest_home_enemy" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"avatars" : {},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 60,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 7
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "weak_zombie_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "wolf_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "common_zombie_event"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 3
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 4,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 60,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+		"buildings" : {
+			"foundaments" : [{
+					"id" : "default",
+					"grade" : 1,
+					"position" : [3, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [3, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [4, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [4, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [4, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [3, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [8, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [8, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [8, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 12]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [2, 13]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [2, 14]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [2, 15]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [3, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [2, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [2, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [3, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [12, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [13, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [13, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [13, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [12, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [12, 0]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [13, 0]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 0]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 1]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 2]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [14, 3]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 0]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 1]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 2]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 3]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [15, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [12, 5]
+				}
+			],
+			"walls" : [{
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [17, 26]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [15, 26]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [14, 25]
+				}, {
+					"id" : "door",
+					"grade" : 1,
+					"position" : [13, 24]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [12, 25]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [11, 26]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [9, 26]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [7, 26]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [4, 11]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [5, 10]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [7, 10]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [7, 32]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [9, 32]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [11, 32]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [13, 32]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [15, 32]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [17, 32]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [18, 31]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [18, 29]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [18, 27]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [5, 32]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [4, 31]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [4, 29]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [4, 27]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [5, 26]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [4, 13]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [5, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [7, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [8, 13]
+				}, {
+					"id" : "door",
+					"grade" : 1,
+					"position" : [8, 11]
+				}, {
+					"id" : "door",
+					"grade" : 1,
+					"position" : [28, 5]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [28, 7]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [28, 3]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [27, 2]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [25, 2]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [24, 1]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [25, 0]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [27, 0]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [29, 0]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [27, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [25, 8]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [24, 9]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [24, 13]
+				}, {
+					"id" : "door",
+					"grade" : 1,
+					"position" : [24, 11]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [25, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [27, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [29, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [31, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 13]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 11]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 9]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 7]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [31, 0]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 1]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 3]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [32, 5]
+				}
+			],
+			"furnitures" : [{
+					"type" : "container",
+					"id" : "workbench_gardenbed_enemy",
+					"rotation" : 0,
+					"position" : [4, 11],
+					"stacks" : [{
+							"stack_id" : "resource_seed",
+							"probability" : 0.5,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 10
+								}
+							}
+						}, {
+							"stack_id" : "carrot",
+							"probability" : 0.4,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 11
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "workbench_gardenbed_enemy",
+					"rotation" : 0,
+					"position" : [2, 11],
+					"stacks" : [{
+							"stack_id" : "resource_seed",
+							"probability" : 0.5,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 11
+								}
+							}
+						}, {
+							"stack_id" : "carrot",
+							"probability" : 0.4,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 9
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "spawn_point",
+					"id" : "furniture_rag",
+					"rotation" : 0,
+					"position" : [6, 11]
+				}, {
+					"type" : "container",
+					"id" : "workbench_meatdryer_enemy",
+					"rotation" : 0,
+					"position" : [8, 12],
+					"stacks" : [{
+							"stack_id" : "food_rawmeat",
+							"probability" : 0.5,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 5
+								}
+							}
+						}, {
+							"stack_id" : "food_jerky",
+							"probability" : 0.4,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 5
+								}
+							}
+						}
+					]
+
+				}, {
+					"type" : "container",
+					"id" : "workbench_watercatcher_enemy",
+					"rotation" : 0,
+					"position" : [7, 12],
+					"stacks" : [{
+							"stack_id" : "empty_bottle",
+							"probability" : 0.5,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 4
+								}
+							}
+						}, {
+							"stack_id" : "full_bottle",
+							"probability" : 0.4,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 2
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [12, 3]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [12, 2]
+				}, {
+					"type" : "decoration",
+					"id" : "furniture_spikes",
+					"rotation" : 3,
+					"position" : [12, 1]
+				}, {
+					"type" : "container",
+					"id" : "workbench_smeltery_enemy",
+					"rotation" : 1,
+					"position" : [13, 3]
+
+				}, {
+					"type" : "container",
+					"id" : "workbench_smeltery_enemy",
+					"rotation" : 1,
+					"position" : [13, 1]
+				}, {
+					"type" : "container",
+					"id" : "workbench_bonfire_enemy",
+					"rotation" : 1,
+					"position" : [11, 6],
+					"stacks" : [{
+							"stack_id" : "wood",
+							"probability" : 0.7,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 20
+								}
+							}
+						}, {
+							"stack_id" : "food_steak",
+							"probability" : 0.3,
+							"stack" : {
+								"amount" : {
+									"type" : "range",
+									"min" : 1,
+									"max" : 6
+								}
+							}
+						}
+					]
+
+				}
+			]
+		}
+	},
+	"enemy_03" : {
+		"serializable" : true,
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"builder_update_period" : 0,
+		"chunk_res" : 10,
+		"chunk_scale" : 10,
+		"chunks_count_x" : 6,
+		"chunks_count_z" : 6,
+		"chunk_grid_size" : 5,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 1.8,
+
+		"resource_objects" : {},
+		"loot_objects" : {
+			"chest_home_enemy" : {
+				"type" : "single",
+				"amount" : 1
+			}
+		},
+		"avatars" : {},
+		"events" : {
+			"event_pve_enemy" : {
+				"type" : "period_requirement",
+				"probability" : 0.7,
+				"period" : 60,
+				"player_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "resource",
+						"resource" : "location_pve_events_counter"
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 7
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"location_requirement" : {
+					"type" : "operation",
+					"first" : {
+						"type" : "sum",
+						"amounts" : [{
+								"type" : "location_alive_avatar_count",
+								"avatar" : "weak_zombie_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "wolf_event"
+							}, {
+								"type" : "location_alive_avatar_count",
+								"avatar" : "common_zombie_event"
+							}
+						]
+					},
+					"second" : {
+						"type" : "single",
+						"amount" : 3
+					},
+					"operation" : {
+						"type" : "lesser"
+					}
+				},
+
+				"action" : {
+					"type" : "random_composite",
+					"actions" : [{
+							"weight" : 4,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "weak_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 2.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "wolf_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}, {
+							"weight" : 0.5,
+							"action" : {
+								"type" : "spawn_avatar",
+								"avatar" : "common_zombie_event",
+								"position" : {
+									"type" : "out_of_player_vision",
+									"radius" : 6.0
+								}
+							}
+						}
+					]
+				}
+			},
+
+			"event_pve_enemy_counter" : {
+				"type" : "period",
+				"period" : 60,
+				"action" : {
+					"type" : "player_reward",
+					"reward" : {
+						"type" : "static_resource",
+						"resource" : "location_pve_events_counter",
+						"amount" : 1
+					}
+				}
+			}
+		},
+		"buildings" : {
+			"foundaments" : [{
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 7]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 8]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 7]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [8, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 8]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [9, 9]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [10, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [12, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [10, 6]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [11, 9]
+				}, {
+					"id" : "default",
+					"grade" : 2,
+					"position" : [12, 9]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [12, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 9]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 9]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 9]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 8]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [5, 7]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 8]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [6, 7]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 7]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 8]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [7, 6]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [11, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [11, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [10, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [10, 5]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [9, 4]
+				}, {
+					"id" : "default",
+					"grade" : 1,
+					"position" : [8, 4]
+				}
+			],
+			"walls" : [{
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [11, 20]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [13, 20]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [15, 20]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [21, 20]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [19, 20]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [23, 20]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [25, 20]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [10, 19]
+				}, {
+					"id" : "window",
+					"grade" : 1,
+					"position" : [10, 17]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [10, 15]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [11, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [13, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [15, 14]
+				}, {
+					"id" : "simple",
+					"grade" : 1,
+					"position" : [14, 13]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [22, 19]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [25, 12]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [23, 12]
+				}, {
+					"id" : "simple",
+					"grade" : 0,
+					"position" : [21, 12]
+				}, {
+					"id" : "window",
+					"grade" : 0,
+					"position" : [26, 11]
+				}, {
+					"id" : "window",
+					"grade" : 0,
+					"position" : [26, 9]
+				}, {
+					"id" : "simple",
+					"grade" : 0,
+					"position" : [25, 8]
+				}, {
+					"id" : "window",
+					"grade" : 0,
+					"position" : [23, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [26, 19]
+				}, {
+					"id" : "window",
+					"grade" : 2,
+					"position" : [26, 17]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [26, 15]
+				}, {
+					"id" : "window",
+					"grade" : 2,
+					"position" : [26, 13]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [22, 17]
+				}, {
+					"id" : "simple",
+					"grade" : 2,
+					"position" : [22, 15]
+				}, {
+					"id" : "door",
+					"grade" : 2,
+					"position" : [22, 13]
+				}, {
+					"id" : "simple",
+					"grade" : 0,
+					"position" : [21, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 0,
+					"position" : [19, 8]
+				}, {
+					"id" : "simple",
+					"grade" : 0,
+					"position" : [17, 8]
+				}
+			],
+			"furnitures" : [{
+					"type" : "container",
+					"id" : "workbench_smeltery_enemy",
+					"rotation" : 3,
+					"position" : [5, 9],
+					"stacks" : [{
+							"stack_id" : "resource_ore_1",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 8
+								}
+							}
+						}, {
+							"stack_id" : "resource_bar_1",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 4
+								}
+							}
+						}, {
+							"stack_id" : "wood",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 4
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "workbench_sawmill_enemy",
+					"rotation" : 3,
+					"position" : [5, 8],
+					"stacks" : [{
+							"stack_id" : "resource_plank_1",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 12
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "furniture_chest_8",
+					"rotation" : 0,
+					"position" : [6, 9],
+					"stacks" : [{
+							"stack_id" : "transistor",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 5
+								}
+							}
+						}, {
+							"stack_id" : "screws",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 4
+								}
+							}
+						}, {
+							"stack_id" : "pass_card_a",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 1
+								}
+							}
+						}, {
+							"stack_id" : "duct_tape",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 1
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "furniture_chest_8",
+					"rotation" : 0,
+					"position" : [7, 9],
+					"stacks" : [{
+							"stack_id" : "wood",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 20
+								}
+							}
+						}, {
+							"stack_id" : "wood",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 15
+								}
+							}
+						}, {
+							"stack_id" : "stone",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 18
+								}
+							}
+						}, {
+							"stack_id" : "resource_ore_1",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 8
+								}
+							}
+						}, {
+							"stack_id" : "resource_stoneblock",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 3
+								}
+							}
+						}, {
+							"stack_id" : "food_jerky",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 7
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "furniture_chest_8",
+					"rotation" : 3,
+					"position" : [5, 7],
+					"stacks" : [{
+							"stack_id" : "carrot",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 8
+								}
+							}
+						}, {
+							"stack_id" : "empty_bottle",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 3
+								}
+							}
+						}, {
+							"stack_id" : "thick_hat",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 1
+								}
+							}
+						}, {
+							"stack_id" : "simple_boots",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 1
+								}
+							}
+						}, {
+							"stack_id" : "resource_stoneblock",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 1
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "spawn_point",
+					"id" : "furniture_rag",
+					"rotation" : 0,
+					"position" : [8, 6]
+				}, {
+					"type" : "container",
+					"id" : "workbench_watercatcher_enemy",
+					"rotation" : 0,
+					"position" : [8, 7],
+					"stacks" : [{
+							"stack_id" : "full_bottle",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 4
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "workbench_watercatcher_enemy",
+					"rotation" : 0,
+					"position" : [8, 8],
+					"stacks" : [{
+							"stack_id" : "full_bottle",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 1
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "container",
+					"id" : "workbench_gardenbed_enemy",
+					"rotation" : 0,
+					"position" : [9, 7],
+					"stacks" : [{
+							"stack_id" : "carrot",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 14
+								}
+							}
+						}
+					]
+				}, {
+					"type" : "collection",
+					"id" : "buildingsite_chopper",
+					"rotation" : 1,
+					"position" : [11, 4],
+					"collection" : {
+						"screws" : 21,
+						"bearings" : 12,
+						"rubber_parts" : 20,
+						"resource_metalscraps" : 13,
+						"engine_parts" : 0,
+						"wire" : 17,
+						"chopper_wheel" : 0,
+						"chopper_fork" : 1,
+						"chopper_gastank" : 1,
+						"chopper_muffler" : 1
+					}
+				}, {
+					"type" : "container",
+					"id" : "workbench_bonfire_enemy",
+					"rotation" : 0,
+					"position" : [9, 4],
+					"stacks" : [{
+							"stack_id" : "wood",
+							"stack" : {
+								"amount" : {
+									"type" : "single",
+									"amount" : 20
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	},
+
+	"tier2_default" : {
+
+		"noise_shift_a_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_a_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_a" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_b_x" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_y" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_shift_b_z" : {
+			"type" : "float_range",
+			"min" : -25.0,
+			"max" : 25.0
+		},
+		"noise_scale_b" : {
+			"type" : "float_range",
+			"min" : 0.04,
+			"max" : 0.15
+		},
+		"noise_shift_c_x" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_y" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_shift_c_z" : {
+			"type" : "float_range",
+			"min" : 0,
+			"max" : 0
+		},
+		"noise_scale_c" : {
+			"type" : "float_range",
+			"min" : 0.12,
+			"max" : 0.12
+		},
+
+		"chunk_res" : 1,
+		"chunk_scale" : 1,
+		"chunks_count_x" : 1,
+		"chunks_count_z" : 1,
+		"chunk_grid_size" : 1,
+		"grid_border" : 1,
+		"chunk_border" : 1,
+		"leave_border" : 0,
+
+		"resource_objects" : {},
+		"loot_objects" : {},
+		"avatars" : {}
+	}
+}
